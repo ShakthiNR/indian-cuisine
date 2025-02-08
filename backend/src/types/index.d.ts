@@ -1,0 +1,1 @@
+export { dishParms, IObject } from './dishTypes.d';
