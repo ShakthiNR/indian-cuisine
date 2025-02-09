@@ -51,18 +51,25 @@ export interface IItemFilter {
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string
   ) => void;
-  dietFilter: string;
-  stateFilterOptions: IOptions[];
-  stateFilter: string;
-  flavorFilterOptions: IOptions[];
-  flavourFilter: string;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  setDietFilter: React.Dispatch<React.SetStateAction<string>>;
-  setFlavourFilter: React.Dispatch<React.SetStateAction<string>>;
-  setStateFilter: React.Dispatch<React.SetStateAction<string>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-  dietFilterOptions: IOptions[];
-  ingredientOptions: IOptions[];
-  ingredientsFilter: string[];
-  setIngredientsFilter: React.Dispatch<React.SetStateAction<string[]>>;
+  filter: IFilter;
+  setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
+  filterOptions: IFilterOptions;
+  setFilterOptions:React.Dispatch<React.SetStateAction<IFilterOptions>>;
+}
+
+
+interface IFilter {
+  state: string;
+  flavor: string;
+  diet: string;
+  ingredients: string[];
+}
+
+interface IFilterOptions {
+  state: IOptions[];
+  flavor: IOptions[];
+  diet: IOptions[];
+  ingredients: IOptions[];
 }

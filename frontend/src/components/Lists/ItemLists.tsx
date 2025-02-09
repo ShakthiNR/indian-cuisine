@@ -1,6 +1,7 @@
 import { DetailsList, DetailsListLayoutMode, IColumn, PrimaryButton, Stack, Text } from '@fluentui/react';
 import { useHistory } from 'react-router-dom';
 import { IItemLists } from '../../types';
+import React from 'react';
 
 const ItemLists = ({
     data,
@@ -168,4 +169,4 @@ const ItemLists = ({
     )
 }
 
-export default ItemLists
+export default React.memo(ItemLists)

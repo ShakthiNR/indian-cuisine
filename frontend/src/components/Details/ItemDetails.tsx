@@ -1,5 +1,6 @@
 import { Separator, Stack, Text } from '@fluentui/react';
 import { IRecipe } from '../../types';
+import React from 'react';
 
 const RecipeDetails = ({ recipe }: { recipe: IRecipe }) => {
     return (
@@ -36,4 +37,4 @@ const RecipeDetails = ({ recipe }: { recipe: IRecipe }) => {
     );
 };
 
-export default RecipeDetails
+export default React.memo(RecipeDetails)

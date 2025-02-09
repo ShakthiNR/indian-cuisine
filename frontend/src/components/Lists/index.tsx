@@ -21,15 +21,19 @@ const Lists = () => {
   const [searchQuery, setSearchQuery] = useState('');
  
 
-  const [stateFilterOptions, setStateFilterOptions] = useState([{ key: '', text: 'All' }]);
-  const [flavorFilterOptions, setFlavorFilterOptions] = useState([{ key: '', text: 'All' }]);
-  const [dietFilterOptions, setDietFilterOptions] = useState([{ key: '', text: 'All' }]);
-  const [ingredientsFilterOptions] = useState(defaultIngredients);
+  const [filterOptions, setFilterOptions] = useState({
+    state: [ { key: '', text: 'All' }],
+    flavor: [ { key: '', text: 'All' }],
+    diet: [ { key: '', text: 'All' }],
+    ingredients: defaultIngredients
+  })
 
-  const [flavourFilter, setFlavourFilter] = useState('');
-  const [stateFilter, setStateFilter] = useState('');
-  const [dietFilter, setDietFilter] = useState('');
-  const [ingredientsFilter, setIngredientsFilter] = useState(['']);
+  const [filter, setFilter] = useState({
+    state: '',
+    flavor: '',
+    diet: '',
+    ingredients: ['']
+  });
 
 
   const [totalItems, setTotalItems] = useState(0);
@@ -38,14 +42,17 @@ const Lists = () => {
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem('filterState') as string) || {};
     setPage(savedState.page || 1);
-    setDietFilter(savedState.dietFilter || '');
+   
     setSearchQuery(savedState.searchQuery || '');
     setSortColumn(savedState.sortColumn || 'name');
     setSortDirection(savedState.sortDirection || 'asc');
-    setFlavourFilter(savedState.flavourFilter || '');
-    setStateFilter(savedState.stateFilter || '');
-    setIngredientsFilter(savedState.ingredientsFilter || ['']);
 
+    setFilter({
+      state: savedState.stateFilter || '',
+      flavor: savedState.flavourFilter || '',
+      diet: savedState.dietFilter || '',
+      ingredients: savedState.ingredientsFilter || ['']
+    })
 
     const fetchFilterData = async () => {
 
@@ -54,16 +61,14 @@ const Lists = () => {
 
       const [stateResponse, flavorResponse, dietResponse] = responses;
 
+      setFilterOptions({
+        ...filterOptions,
+        state: buildFilter(stateResponse.data),
+        flavor: buildFilter(flavorResponse.data),
+        diet: buildFilter(dietResponse.data)
+      })
 
-      if (stateResponse.data) {
-        setStateFilterOptions(buildFilter(stateResponse.data))
-      }
-      if (flavorResponse.data) {
-        setFlavorFilterOptions(buildFilter(flavorResponse.data))
-      }
-      if (dietResponse.data) {
-        setDietFilterOptions(buildFilter(dietResponse.data))
-      }
+      return
     }
     fetchFilterData()
 
@@ -73,7 +78,16 @@ const Lists = () => {
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       const skip = (page - 1) * pageSize;
-      const response = await fetchData({ skip, pageSize, sortColumn, sortDirection, dietFilter, flavourFilter, stateFilter, searchQuery, ingredientsFilter: ingredientsFilter.join(',') });
+      const response = await fetchData({ 
+        skip, 
+        pageSize, 
+        sortColumn, 
+        sortDirection, 
+        dietFilter: filter.diet, 
+        flavourFilter: filter.flavor, 
+        stateFilter: filter.state, 
+        searchQuery, 
+        ingredientsFilter: filter.ingredients.join(',') });
       setData(response.data);
       setTotalItems(response.total);
       setIsLoading(false);
@@ -83,19 +97,16 @@ const Lists = () => {
 
     const filterState = {
       page,
-      dietFilter,
+      dietFilter: filter.diet,
       searchQuery,
       sortColumn,
       sortDirection,
-      flavourFilter,
-      stateFilter,
-      ingredientsFilter
+      flavourFilter: filter.flavor,
+      stateFilter: filter.state,
+      ingredientsFilter: filter.ingredients
     };
     localStorage.setItem('filterState', JSON.stringify(filterState));
-  }, [page, pageSize, dietFilter, sortColumn, sortDirection, stateFilter, flavourFilter, searchQuery, dietFilter, ingredientsFilter]);
-
-
-
+  }, [page, pageSize, filter.diet, sortColumn, sortDirection, filter.state, filter.flavor, searchQuery, filter.diet, filter.ingredients]);
 
 
   const handleSearchChange = (event: any) => {
@@ -125,20 +136,12 @@ const Lists = () => {
       <ItemFilter
         searchQuery={searchQuery}
         handleSearchChange={handleSearchChange}
-        dietFilter={dietFilter}
-        stateFilterOptions={stateFilterOptions}
-        dietFilterOptions={dietFilterOptions}
-        stateFilter={stateFilter}
-        flavorFilterOptions={flavorFilterOptions}
-        flavourFilter={flavourFilter}
+        filter={filter}
+        setFilter={setFilter}
+        filterOptions={filterOptions}
+        setFilterOptions={setFilterOptions}
         setPage={setPage}
-        setDietFilter={setDietFilter}
-        setFlavourFilter={setFlavourFilter}
-        setStateFilter={setStateFilter}
         setSearchQuery={setSearchQuery}
-        ingredientOptions={ingredientsFilterOptions}
-        ingredientsFilter={ingredientsFilter}
-        setIngredientsFilter={setIngredientsFilter}
       />
       <ItemLists
         data={data}

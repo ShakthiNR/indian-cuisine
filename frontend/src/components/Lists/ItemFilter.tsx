@@ -1,50 +1,43 @@
 import { DefaultButton, Dropdown, Stack, TextField } from '@fluentui/react';
-import React from 'react';
-import { IItemFilter, IOptions } from '../../types';
+import React, { useCallback } from 'react';
+import { IItemFilter } from '../../types';
 
 const ItemFilter = ({
     searchQuery,
     handleSearchChange,
-    dietFilter,
-    stateFilterOptions,
-    stateFilter,
-    flavorFilterOptions,
-    flavourFilter,
     setPage,
-    setDietFilter,
-    setFlavourFilter,
-    setStateFilter,
     setSearchQuery,
-    dietFilterOptions,
-    ingredientOptions,
-    ingredientsFilter,
-    setIngredientsFilter
+    filter,
+    setFilter,
+    filterOptions
 }: IItemFilter
 ) => {
 
-    const handleDietFilterChange = (event: React.FormEvent<HTMLDivElement>, option: any) => {
-        setDietFilter(option.key);
+    const handleDietFilterChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
+      setFilter({...filter, diet: option.key})
         setPage(1);
-    };
+    }, [filter])
 
-    const handleStateFilterChange = (event: React.FormEvent<HTMLDivElement>, option: any) => {
-        setStateFilter(option.key);
+    const handleStateFilterChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
+        setFilter({...filter, state: option.key})
         setPage(1);
-    };
-    const handleFlavorFilterChange = (event: React.FormEvent<HTMLDivElement>, option: any) => {
-        setFlavourFilter(option.key);
-        setPage(1);
-    };
+    },[filter])
 
-    const handleIngredientChange = (event: React.FormEvent<HTMLDivElement>, option: any) => {
+    const handleFlavorFilterChange = useCallback( (event: React.FormEvent<HTMLDivElement>, option: any) => {
+        setFilter({...filter, flavor: option.key})
+        setPage(1);
+    },[filter])
+
+    const handleIngredientChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
         const selectedKeys = option?.selected
-            ? [...ingredientsFilter, option.key.toString()]
-            : ingredientsFilter.filter(x => x !== option?.key);
+            ? [...filter.ingredients, option.key.toString()]
+            : filter.ingredients.filter(x => x !== option?.key);
         if(selectedKeys.length === 0) return
-        setIngredientsFilter(selectedKeys)
+        setFilter({...filter, ingredients: selectedKeys})
 
         setPage(1);
-    }
+    },[filter])
+
 
 
     return (
@@ -64,30 +57,30 @@ const ItemFilter = ({
                 />
                 <Dropdown
                     label="Filter by Diet"
-                    options={dietFilterOptions}
-                    selectedKey={dietFilter}
+                    options={filterOptions.diet}
+                    selectedKey={filter.diet}
                     onChange={handleDietFilterChange}
                     styles={{ dropdown: { width: 150 } }}
                 />
                 <Dropdown
                     label="Filter by State"
-                    options={stateFilterOptions}
-                    selectedKey={stateFilter}
+                    options={filterOptions.state}
+                    selectedKey={filter.state}
                     onChange={handleStateFilterChange}
                     styles={{ dropdown: { width: 150 } }}
                 />
                 <Dropdown
                     label="Filter by Flavor"
-                    options={flavorFilterOptions}
-                    selectedKey={flavourFilter}
+                    options={filterOptions.flavor}
+                    selectedKey={filter.flavor}
                     onChange={handleFlavorFilterChange}
                     styles={{ dropdown: { width: 150 } }}
                 />
 
                 <Dropdown
                     label="Filter by Ingredients"
-                    options={ingredientOptions}
-                    selectedKeys={ingredientsFilter}
+                    options={filterOptions.ingredients}
+                    selectedKeys={filter.ingredients}
                     onChange={handleIngredientChange}
                     multiSelect
                     styles={{ dropdown: { width: 120 } }}
@@ -105,12 +98,18 @@ const ItemFilter = ({
                         }
                     }}
                     onClick={() => {
-                        setDietFilter('');
-                        setFlavourFilter('');
-                        setStateFilter('');
+                        setFilter({
+                            diet: '',
+                            state: '',
+                            flavor: '',
+                            ingredients: [""]
+                        })
+                        // setDietFilter('');
+                        // setFlavourFilter('');
+                        // setStateFilter('');
                         setSearchQuery('');
                         setPage(1);
-                        setIngredientsFilter([""])
+                       // setIngredientsFilter([""])
                     }}
                 />
             </Stack>
@@ -118,4 +117,4 @@ const ItemFilter = ({
     )
 }
 
-export default ItemFilter
+export default React.memo(ItemFilter)
