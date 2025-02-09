@@ -29,14 +29,3 @@
 6. npm run start
 
 
-## .env of frontend
-```sh
-REACT_APP_BACKEND_URL=http://localhost:3001
-```
-
-## .env of backend
-```sh
-PORT=3001
-MONGO_URI="mongodb+srv://shakthi:0eM0hbDO2TNBt0bz@cluster0.aegm1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-```
-
