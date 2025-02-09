@@ -28,4 +28,12 @@
 5. cd frontend/
 6. npm run start
 
+## .env of frontend
+```sh
+REACT_APP_BACKEND_URL=http://localhost:3001
+```
 
+## .env of backend
+```sh
+PORT=3001
+```
