@@ -14,29 +14,37 @@ const ItemFilter = ({
 ) => {
 
     const handleDietFilterChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
-      setFilter({...filter, diet: option.key})
+        setFilter({ ...filter, diet: option.key })
         setPage(1);
     }, [filter])
 
     const handleStateFilterChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
-        setFilter({...filter, state: option.key})
+        setFilter({ ...filter, state: option.key })
         setPage(1);
-    },[filter])
+    }, [filter])
 
-    const handleFlavorFilterChange = useCallback( (event: React.FormEvent<HTMLDivElement>, option: any) => {
-        setFilter({...filter, flavor: option.key})
+    const handleFlavorFilterChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
+        setFilter({ ...filter, flavor: option.key })
         setPage(1);
-    },[filter])
+    }, [filter])
 
     const handleIngredientChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
-        const selectedKeys = option?.selected
+        let selectedKeys = option?.selected
             ? [...filter.ingredients, option.key.toString()]
             : filter.ingredients.filter(x => x !== option?.key);
-        if(selectedKeys.length === 0) return
-        setFilter({...filter, ingredients: selectedKeys})
+        // debugger
+
+        if (option.key?.toString() !== "") {
+            selectedKeys = selectedKeys.filter(x => x !== "")
+        } else {
+            selectedKeys = selectedKeys.filter(x => x === "")
+        }
+
+        if (selectedKeys.length === 0) return
+        setFilter({ ...filter, ingredients: selectedKeys })
 
         setPage(1);
-    },[filter])
+    }, [filter])
 
 
 
@@ -109,7 +117,7 @@ const ItemFilter = ({
                         // setStateFilter('');
                         setSearchQuery('');
                         setPage(1);
-                       // setIngredientsFilter([""])
+                        // setIngredientsFilter([""])
                     }}
                 />
             </Stack>

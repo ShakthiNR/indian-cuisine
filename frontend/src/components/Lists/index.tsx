@@ -87,7 +87,9 @@ const Lists = () => {
         flavourFilter: filter.flavor, 
         stateFilter: filter.state, 
         searchQuery, 
-        ingredientsFilter: filter.ingredients.join(',') });
+        ingredientsFilter: filter?.ingredients?.filter(x => x !== "")?.join(',') });
+
+      
       setData(response.data);
       setTotalItems(response.total);
       setIsLoading(false);

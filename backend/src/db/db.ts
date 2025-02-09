@@ -3,6 +3,12 @@ import logger from "@/logger";
 import { MONGO_URI } from "@/secrets";
 import { MongoClient, ServerApiVersion } from 'mongodb'
 const uri =  MONGO_URI;
+
+/**
+ * @description db connection
+ * @author Shakthi NR
+ */
+
 const client = new MongoClient(uri as string, {
   serverApi: {
     version: ServerApiVersion.v1,

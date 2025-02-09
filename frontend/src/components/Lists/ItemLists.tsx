@@ -1,6 +1,6 @@
-import { DetailsList, DetailsListLayoutMode, IColumn, PrimaryButton, Stack, Text } from '@fluentui/react';
+import { BaseButton, Button, DetailsList, DetailsListLayoutMode, IColumn, PrimaryButton, Stack, Text } from '@fluentui/react';
 import { useHistory } from 'react-router-dom';
-import { IItemLists } from '../../types';
+import { IItemLists, IRecipe } from '../../types';
 import React from 'react';
 
 const ItemLists = ({
@@ -68,7 +68,7 @@ const ItemLists = ({
             minWidth: 100,
             maxWidth: 200,
             onRender: (item) => (
-                <PrimaryButton text="View More" onClick={() => handleAddMore(item._id)} />
+                <PrimaryButton text="View More" onClick={(e) => handleAddMore(e, item._id)} />
             ),
         }
     ];
@@ -84,7 +84,8 @@ const ItemLists = ({
         setPage(1)
     };
 
-    const handleAddMore = (id: string) => {
+    const handleAddMore = (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLDivElement | BaseButton | Button | HTMLSpanElement, MouseEvent>, id: string) => {
+        event.stopPropagation();
         history.push(`/dish/${id}`);
     };
 
@@ -121,6 +122,10 @@ const ItemLists = ({
         setDebounceTimeout(timeoutId);
     };
 
+    const handleRowClick = (item: IRecipe) => {
+        history.push(`/dish/${item._id}`);
+      };
+
     return (
         <div style={{ margin: '20px' }}>
             {
@@ -141,6 +146,7 @@ const ItemLists = ({
                         setKey="set"
                         layoutMode={DetailsListLayoutMode.fixedColumns}
                         isHeaderVisible={true}
+                        onItemInvoked={handleRowClick}
                     />
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                         <PrimaryButton

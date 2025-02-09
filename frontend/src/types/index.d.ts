@@ -11,6 +11,7 @@ export interface IFetchParams {
 }
 
 export interface IRecipe {
+  _id?: string;
   cook_time: number;
   course: string;
   createdAt: Date;

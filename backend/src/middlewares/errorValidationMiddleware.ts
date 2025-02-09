@@ -3,6 +3,11 @@ import { NextFunction, Request, Response } from "express";
 import { Schema } from "joi";
 import logger from "../logger";
 
+
+/**
+ * @description error validation
+ * @author Shakthi NR
+ */
 export const handleErrorValidation = (
   schema: Schema,
   hasToValidatePayload: boolean = true

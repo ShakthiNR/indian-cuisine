@@ -5,6 +5,7 @@ const ExcelJS = require("exceljs");
 
 let csvFilePath = "./indian_food.csv";
 const Process = "Seeding data";
+
 async function seedData() {
   try {
     logger.info(`${Process} started...`);
@@ -33,7 +34,7 @@ async function seedData() {
             value === -1
               ? null
               : headers[index] === "ingredients"
-              ? value?.split(", ")
+              ? value?.split(", ").map((item: string) => item.trim())
               : value;
         });
         records.push(data);

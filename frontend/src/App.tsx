@@ -10,7 +10,7 @@ export const App: React.FunctionComponent = () => {
       <Stack
         horizontalAlign="center"
         styles={{ root: { margin: '1rem' } }}
-        >
+      >
         <Text variant="xxLargePlus">Indian cuisine</Text>
       </Stack>
       <Switch>

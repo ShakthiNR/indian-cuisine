@@ -1,5 +1,9 @@
 import { NextFunction, Response, Request } from "express";
 
+/**
+ * @description error handler
+ * @author Shakthi NR
+ */
 export const errorHandler = (
   error: Error,
   req: Request,

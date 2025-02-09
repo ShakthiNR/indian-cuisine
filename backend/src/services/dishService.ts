@@ -43,12 +43,7 @@ export const dishService = {
     }
 
     if (ingredients) {
-      let optRegexp: IObject[] = [];
-      ingredients.map((ingredient: string) =>
-        optRegexp.push(new RegExp("^" + ingredient + "$", "i"))
-      );
-
-      findQuery["ingredients"] = { $in: optRegexp };
+      findQuery["ingredients"] = { $size: ingredients?.length,  $all: ingredients };
     }
 
     if (searchText) {
