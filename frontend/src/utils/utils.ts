@@ -12,3 +12,12 @@ export const buildFilter = (data: Array<string>) => {
     }),
   ];
 };
+
+export const defaultIngredients = [
+  { key: "", text: "All" },
+  { key: "Rice flour", text: "Rice flour" },
+  { key: "coconut", text: "coconut" },
+  { key: "jaggery", text: "jaggery" },
+  { key: "banana", text: "banana" },
+  { key: "ghee", text: "ghee" },
+];

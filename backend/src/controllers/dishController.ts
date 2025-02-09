@@ -25,6 +25,8 @@ export const dishController = {
 
       const searchText = (req.query.searchText as string) || "";
 
+      const ingredients = (req.query.ingredients as string) || ""
+
       const params: dishParms = {
         skip,
         limit,
@@ -35,6 +37,7 @@ export const dishController = {
         region: region?.toLowerCase(),
         flavor: flavor?.toLowerCase(),
         searchText: searchText?.toLowerCase(),
+        ingredients
       };
 
       logger.info("dishController | getDishes");

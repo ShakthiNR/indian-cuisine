@@ -8,6 +8,7 @@ export interface dishParms {
     region?: string;
     flavor?: string;
     searchText?: string;
+    ingredients?: string
 }
 
 export interface IObject {

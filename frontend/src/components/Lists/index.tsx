@@ -1,43 +1,40 @@
 import { useEffect, useState } from 'react';
 import Loader from '../../common/Loader';
 import { fetchData, fetchFilters } from '../../utils/api';
-import { buildFilter } from '../../utils/utils';
+import { buildFilter, defaultIngredients } from '../../utils/utils';
 import ItemFilter from './ItemFilter';
 import ItemLists from './ItemLists';
 
 const Lists = () => {
 
-  // data
   const [data, setData] = useState([]);
 
-  // loading state
   const [isLoading, setIsLoading] = useState(true);
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  // pagination
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
 
-  // sorting
   const [sortColumn, setSortColumn] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
 
-  // filtering
   const [searchQuery, setSearchQuery] = useState('');
-  const [dietFilter, setDietFilter] = useState('');
+ 
+
   const [stateFilterOptions, setStateFilterOptions] = useState([{ key: '', text: 'All' }]);
   const [flavorFilterOptions, setFlavorFilterOptions] = useState([{ key: '', text: 'All' }]);
   const [dietFilterOptions, setDietFilterOptions] = useState([{ key: '', text: 'All' }]);
+  const [ingredientsFilterOptions] = useState(defaultIngredients);
 
-
-  // setting the filter option
   const [flavourFilter, setFlavourFilter] = useState('');
   const [stateFilter, setStateFilter] = useState('');
+  const [dietFilter, setDietFilter] = useState('');
+  const [ingredientsFilter, setIngredientsFilter] = useState(['']);
+
+
   const [totalItems, setTotalItems] = useState(0);
 
 
-  // fetch the filter options  
-  // set the filter options on initial load based on local storage
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem('filterState') as string) || {};
     setPage(savedState.page || 1);
@@ -47,6 +44,7 @@ const Lists = () => {
     setSortDirection(savedState.sortDirection || 'asc');
     setFlavourFilter(savedState.flavourFilter || '');
     setStateFilter(savedState.stateFilter || '');
+    setIngredientsFilter(savedState.ingredientsFilter || ['']);
 
 
     const fetchFilterData = async () => {
@@ -72,11 +70,10 @@ const Lists = () => {
   }, []);
 
 
-  // fetch data from api
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       const skip = (page - 1) * pageSize;
-      const response = await fetchData({ skip, pageSize, sortColumn, sortDirection, dietFilter, flavourFilter, stateFilter, searchQuery });
+      const response = await fetchData({ skip, pageSize, sortColumn, sortDirection, dietFilter, flavourFilter, stateFilter, searchQuery, ingredientsFilter: ingredientsFilter.join(',') });
       setData(response.data);
       setTotalItems(response.total);
       setIsLoading(false);
@@ -91,16 +88,16 @@ const Lists = () => {
       sortColumn,
       sortDirection,
       flavourFilter,
-      stateFilter
+      stateFilter,
+      ingredientsFilter
     };
     localStorage.setItem('filterState', JSON.stringify(filterState));
-  }, [page, pageSize, dietFilter, sortColumn, sortDirection, stateFilter, flavourFilter, searchQuery, dietFilter]);
+  }, [page, pageSize, dietFilter, sortColumn, sortDirection, stateFilter, flavourFilter, searchQuery, dietFilter, ingredientsFilter]);
 
 
 
 
 
-  // handle search
   const handleSearchChange = (event: any) => {
     const value = event.target?.value;
     setSearchQuery(value);
@@ -139,6 +136,9 @@ const Lists = () => {
         setFlavourFilter={setFlavourFilter}
         setStateFilter={setStateFilter}
         setSearchQuery={setSearchQuery}
+        ingredientOptions={ingredientsFilterOptions}
+        ingredientsFilter={ingredientsFilter}
+        setIngredientsFilter={setIngredientsFilter}
       />
       <ItemLists
         data={data}

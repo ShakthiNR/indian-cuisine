@@ -1,6 +1,6 @@
 import { DefaultButton, Dropdown, Stack, TextField } from '@fluentui/react';
 import React from 'react';
-import { IItemFilter } from '../../types';
+import { IItemFilter, IOptions } from '../../types';
 
 const ItemFilter = ({
     searchQuery,
@@ -15,7 +15,10 @@ const ItemFilter = ({
     setFlavourFilter,
     setStateFilter,
     setSearchQuery,
-    dietFilterOptions
+    dietFilterOptions,
+    ingredientOptions,
+    ingredientsFilter,
+    setIngredientsFilter
 }: IItemFilter
 ) => {
 
@@ -32,6 +35,16 @@ const ItemFilter = ({
         setFlavourFilter(option.key);
         setPage(1);
     };
+
+    const handleIngredientChange = (event: React.FormEvent<HTMLDivElement>, option: any) => {
+        const selectedKeys = option?.selected
+            ? [...ingredientsFilter, option.key.toString()]
+            : ingredientsFilter.filter(x => x !== option?.key);
+        if(selectedKeys.length === 0) return
+        setIngredientsFilter(selectedKeys)
+
+        setPage(1);
+    }
 
 
     return (
@@ -54,21 +67,30 @@ const ItemFilter = ({
                     options={dietFilterOptions}
                     selectedKey={dietFilter}
                     onChange={handleDietFilterChange}
-                    styles={{ dropdown: { width: 200 } }}
+                    styles={{ dropdown: { width: 150 } }}
                 />
                 <Dropdown
                     label="Filter by State"
                     options={stateFilterOptions}
                     selectedKey={stateFilter}
                     onChange={handleStateFilterChange}
-                    styles={{ dropdown: { width: 200 } }}
+                    styles={{ dropdown: { width: 150 } }}
                 />
                 <Dropdown
                     label="Filter by Flavor"
                     options={flavorFilterOptions}
                     selectedKey={flavourFilter}
                     onChange={handleFlavorFilterChange}
-                    styles={{ dropdown: { width: 200 } }}
+                    styles={{ dropdown: { width: 150 } }}
+                />
+
+                <Dropdown
+                    label="Filter by Ingredients"
+                    options={ingredientOptions}
+                    selectedKeys={ingredientsFilter}
+                    onChange={handleIngredientChange}
+                    multiSelect
+                    styles={{ dropdown: { width: 120 } }}
                 />
             </Stack>
             <Stack
@@ -88,6 +110,7 @@ const ItemFilter = ({
                         setStateFilter('');
                         setSearchQuery('');
                         setPage(1);
+                        setIngredientsFilter([""])
                     }}
                 />
             </Stack>
