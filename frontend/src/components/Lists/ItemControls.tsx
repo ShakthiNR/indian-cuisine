@@ -46,7 +46,7 @@ const ItemControls = ({
 
         if (selectedKeys.length === 0) return
 
-        setSelectedIngredients(selectedKeys)
+        setSelectedIngredients(()=> selectedKeys)
         setFilter({
             state: '',
             flavor: '',

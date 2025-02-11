@@ -51,8 +51,7 @@ const Lists = () => {
     setFilter({
       state: savedState.stateFilter || '',
       flavor: savedState.flavourFilter || '',
-      diet: savedState.dietFilter || '',
-
+      diet: savedState.dietFilter || ''
     })
     setSelectedIngredients(savedState.ingredientsFilter || [''])
 
@@ -99,7 +98,6 @@ const Lists = () => {
     }
     fetchDataFromAPI();
 
-
     const itemsControlState = {
       page,
       dietFilter: filter.diet,
@@ -108,13 +106,13 @@ const Lists = () => {
       sortDirection,
       flavourFilter: filter.flavor,
       stateFilter: filter.state,
-      ingredientsFilter: selectedIngredients
+     // ingredientsFilter: selectedIngredients
     };
     localStorage.setItem('itemsControlState', JSON.stringify(itemsControlState));
   }, [page, pageSize, filter.diet, sortColumn, sortDirection, filter.state, filter.flavor, searchQuery, filter.diet,
     selectedIngredients 
    // filter.ingredients
-  ]);
+]);
 
 
   const handleSearchChange = (event: any) => {
