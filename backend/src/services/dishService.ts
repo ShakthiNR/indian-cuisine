@@ -43,7 +43,10 @@ export const dishService = {
     }
 
     if (ingredients) {
-      findQuery["ingredients"] = { $size: ingredients?.length,  $all: ingredients };
+      // findQuery["ingredients"] = { $all: ingredients };
+      findQuery["ingredients"] = {
+        $not: { $elemMatch: { $nin: ingredients } },
+      };
     }
 
     if (searchText) {

@@ -1,6 +1,8 @@
 import { IFetchParams } from "../types";
 
-export const fetchData = async ({ skip = 10, pageSize = 10, sortColumn, sortDirection, dietFilter, flavourFilter, stateFilter, searchQuery, ingredientsFilter }: IFetchParams) => {
+export const fetchData = async ({ skip = 10, pageSize = 10, sortColumn, sortDirection, dietFilter, flavourFilter, stateFilter, searchQuery, 
+ingredientsFilter 
+}: IFetchParams) => {
   const params = new URLSearchParams();
 
   params.append('limit', "" + pageSize);
@@ -11,9 +13,9 @@ export const fetchData = async ({ skip = 10, pageSize = 10, sortColumn, sortDire
   flavourFilter && params.append('flavor', flavourFilter);
   stateFilter && params.append('state', stateFilter);
   searchQuery && params.append('searchText', searchQuery);
-  if(ingredientsFilter) {
-    params.append('ingredients', ingredientsFilter);
-  }
+ if(ingredientsFilter) {
+   params.append('ingredients', ingredientsFilter);
+ }
 
 
   const url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/dishes?${params.toString()}`;

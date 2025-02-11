@@ -58,6 +58,9 @@ export interface IItemFilter {
   setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
   filterOptions: IFilterOptions;
   setFilterOptions:React.Dispatch<React.SetStateAction<IFilterOptions>>;
+  suggestions: IOptions[];
+  setSelectedIngredients: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedIngredients: string[];
 }
 
 
@@ -65,12 +68,12 @@ interface IFilter {
   state: string;
   flavor: string;
   diet: string;
-  ingredients: string[];
+ // ingredients: string[];
 }
 
 interface IFilterOptions {
   state: IOptions[];
   flavor: IOptions[];
   diet: IOptions[];
-  ingredients: IOptions[];
+ // ingredients: IOptions[];
 }

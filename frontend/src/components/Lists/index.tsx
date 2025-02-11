@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../../common/Loader';
 import { fetchData, fetchFilters } from '../../utils/api';
 import { buildFilter, defaultIngredients } from '../../utils/utils';
-import ItemFilter from './ItemFilter';
+import ItemControls from './ItemControls';
 import ItemLists from './ItemLists';
 
 const Lists = () => {
@@ -24,15 +24,16 @@ const Lists = () => {
   const [filterOptions, setFilterOptions] = useState({
     state: [ { key: '', text: 'All' }],
     flavor: [ { key: '', text: 'All' }],
-    diet: [ { key: '', text: 'All' }],
-    ingredients: defaultIngredients
+    diet: [ { key: '', text: 'All' }]
   })
+
+  const [suggestions] = useState(defaultIngredients)
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
 
   const [filter, setFilter] = useState({
     state: '',
     flavor: '',
-    diet: '',
-    ingredients: ['']
+    diet: ''
   });
 
 
@@ -40,7 +41,7 @@ const Lists = () => {
 
 
   useEffect(() => {
-    const savedState = JSON.parse(localStorage.getItem('filterState') as string) || {};
+    const savedState = JSON.parse(localStorage.getItem('itemsControlState') as string) || {};
     setPage(savedState.page || 1);
    
     setSearchQuery(savedState.searchQuery || '');
@@ -51,8 +52,9 @@ const Lists = () => {
       state: savedState.stateFilter || '',
       flavor: savedState.flavourFilter || '',
       diet: savedState.dietFilter || '',
-      ingredients: savedState.ingredientsFilter || ['']
+
     })
+    setSelectedIngredients(savedState.ingredientsFilter || [''])
 
     const fetchFilterData = async () => {
 
@@ -87,7 +89,8 @@ const Lists = () => {
         flavourFilter: filter.flavor, 
         stateFilter: filter.state, 
         searchQuery, 
-        ingredientsFilter: filter?.ingredients?.filter(x => x !== "")?.join(',') });
+       ingredientsFilter: selectedIngredients?.filter(x => x !== "")?.join(',') 
+      });
 
       
       setData(response.data);
@@ -97,7 +100,7 @@ const Lists = () => {
     fetchDataFromAPI();
 
 
-    const filterState = {
+    const itemsControlState = {
       page,
       dietFilter: filter.diet,
       searchQuery,
@@ -105,10 +108,13 @@ const Lists = () => {
       sortDirection,
       flavourFilter: filter.flavor,
       stateFilter: filter.state,
-      ingredientsFilter: filter.ingredients
+      ingredientsFilter: selectedIngredients
     };
-    localStorage.setItem('filterState', JSON.stringify(filterState));
-  }, [page, pageSize, filter.diet, sortColumn, sortDirection, filter.state, filter.flavor, searchQuery, filter.diet, filter.ingredients]);
+    localStorage.setItem('itemsControlState', JSON.stringify(itemsControlState));
+  }, [page, pageSize, filter.diet, sortColumn, sortDirection, filter.state, filter.flavor, searchQuery, filter.diet,
+    selectedIngredients 
+   // filter.ingredients
+  ]);
 
 
   const handleSearchChange = (event: any) => {
@@ -135,7 +141,7 @@ const Lists = () => {
 
   return (
     <div>
-      <ItemFilter
+      <ItemControls
         searchQuery={searchQuery}
         handleSearchChange={handleSearchChange}
         filter={filter}
@@ -144,6 +150,9 @@ const Lists = () => {
         setFilterOptions={setFilterOptions}
         setPage={setPage}
         setSearchQuery={setSearchQuery}
+        suggestions={suggestions}
+        selectedIngredients={selectedIngredients}
+        setSelectedIngredients={setSelectedIngredients}
       />
       <ItemLists
         data={data}

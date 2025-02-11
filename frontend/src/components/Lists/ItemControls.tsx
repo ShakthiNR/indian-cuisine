@@ -1,15 +1,19 @@
 import { DefaultButton, Dropdown, Stack, TextField } from '@fluentui/react';
 import React, { useCallback } from 'react';
 import { IItemFilter } from '../../types';
+import InfoButton from '../../common/InfoButton';
 
-const ItemFilter = ({
+const ItemControls = ({
     searchQuery,
     handleSearchChange,
     setPage,
     setSearchQuery,
     filter,
     setFilter,
-    filterOptions
+    filterOptions,
+    suggestions,
+    selectedIngredients,
+    setSelectedIngredients
 }: IItemFilter
 ) => {
 
@@ -30,8 +34,8 @@ const ItemFilter = ({
 
     const handleIngredientChange = useCallback((event: React.FormEvent<HTMLDivElement>, option: any) => {
         let selectedKeys = option?.selected
-            ? [...filter.ingredients, option.key.toString()]
-            : filter.ingredients.filter(x => x !== option?.key);
+            ? [...selectedIngredients, option.key.toString()]
+            : selectedIngredients.filter(x => x !== option?.key);
         // debugger
 
         if (option.key?.toString() !== "") {
@@ -41,11 +45,18 @@ const ItemFilter = ({
         }
 
         if (selectedKeys.length === 0) return
-        setFilter({ ...filter, ingredients: selectedKeys })
+
+        setSelectedIngredients(selectedKeys)
+        setFilter({
+            state: '',
+            flavor: '',
+            diet: '',
+            // ingredients:['']
+        })
+        setSearchQuery("")
 
         setPage(1);
-    }, [filter])
-
+    }, [selectedIngredients])
 
 
     return (
@@ -85,19 +96,6 @@ const ItemFilter = ({
                     styles={{ dropdown: { width: 150 } }}
                 />
 
-                <Dropdown
-                    label="Filter by Ingredients"
-                    options={filterOptions.ingredients}
-                    selectedKeys={filter.ingredients}
-                    onChange={handleIngredientChange}
-                    multiSelect
-                    styles={{ dropdown: { width: 120 } }}
-                />
-            </Stack>
-            <Stack
-                horizontalAlign='center'
-                verticalAlign='center'
-            >
                 <DefaultButton
                     text="Reset Filters"
                     styles={{
@@ -110,19 +108,45 @@ const ItemFilter = ({
                             diet: '',
                             state: '',
                             flavor: '',
-                            ingredients: [""]
+                            //  ingredients: [""]
                         })
-                        // setDietFilter('');
-                        // setFlavourFilter('');
-                        // setStateFilter('');
                         setSearchQuery('');
                         setPage(1);
-                        // setIngredientsFilter([""])
                     }}
                 />
             </Stack>
+
+
+            <Stack
+                horizontal
+                horizontalAlign="center"
+            >
+
+
+                <Stack
+                    styles={{ root: { marginTop: '1rem' } }}
+                    horizontal
+                    verticalAlign="center"
+                >
+                    <Dropdown
+                        label="Choose Ingredients (dish suggestions)"
+                        // options={filterOptions.ingredients}
+                        // selectedKeys={filter.ingredients}
+                        // onChange={handleIngredientChange}
+                        placeholder="Select ingredients"
+                        options={suggestions}
+                        onChange={handleIngredientChange}
+                        selectedKeys={selectedIngredients}
+                        multiSelect
+                        styles={{ dropdown: { width: 300 } }}
+                    />
+
+                    <InfoButton />
+                </Stack>
+            </Stack>
+
         </div>
     )
 }
 
-export default React.memo(ItemFilter)
+export default React.memo(ItemControls)
